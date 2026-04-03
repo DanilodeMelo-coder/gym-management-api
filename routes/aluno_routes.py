@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from services.aluno_services import criar_aluno_service
+from services.aluno_services import criar_aluno_service, atualizar_aluno_service, deletar_aluno_service
 from database.db import alunos_db
-from models.aluno import Aluno
+from models.aluno import Aluno, AlunoUpdate
 
 
 router = APIRouter()
@@ -27,3 +27,18 @@ def buscar_aluno(aluno):
             return {"aluno": aluno_cadastrado}
         
     return {"mensagem": "Aluno não cadastrado"}
+
+@router.put("/aluno/{id}")
+def atualizar_aluno(id: int, aluno: AlunoUpdate):
+
+    aluno_atualizado = atualizar_aluno_service(id, aluno.nome, aluno.idade)
+
+    return aluno_atualizado
+
+
+@router.delete("/aluno/{id}")
+def deletar_aluno(id:int):
+
+    aluno_deletado = deletar_aluno_service(id)
+
+    return aluno_deletado
