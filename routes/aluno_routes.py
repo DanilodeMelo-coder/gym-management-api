@@ -19,6 +19,8 @@ def criar_aluno(aluno: Aluno):
 
     return aluno_verificado
 
+
+
 @router.get("/buscar-aluno/{aluno}")
 def buscar_aluno(aluno):
 
@@ -28,12 +30,16 @@ def buscar_aluno(aluno):
         
     return {"mensagem": "Aluno não cadastrado"}
 
+
+
 @router.put("/aluno/{id}")
 def atualizar_aluno(id: int, aluno: AlunoUpdate):
 
     aluno_atualizado = atualizar_aluno_service(id, aluno.nome, aluno.idade)
 
     return aluno_atualizado
+
+
 
 
 @router.delete("/aluno/{id}")

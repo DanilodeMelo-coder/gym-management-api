@@ -1,4 +1,5 @@
 from database.db import alunos_db, salvar_aluno_db
+from datetime import date
 
 #FUNÇOES SERVICES PRINCIPAIS
 
@@ -6,9 +7,9 @@ def criar_aluno_service(aluno):
 
     aluno.nome = aluno.nome.lower().strip()
 
-    duplicado = verificar_nome_duplicados(aluno.nome)
+    cpf_existente = verificar_cpf_duplicados(aluno.cpf)
     nome_vazio = verificar_nome_vazio(aluno.nome)
-    idade_verificada = verificar_idade(aluno.idade)
+    idade_verificada = verificar_idade(aluno.data_nascimento)
 
     if nome_vazio:
 
@@ -16,9 +17,9 @@ def criar_aluno_service(aluno):
                 "mensage": "Nome vazio",
                 "data": None}
     else:
-        if duplicado:
+        if cpf_existente:
             return {"status": "erro",
-                "menssage": "Nome duplicado",
+                "menssage": "esse cpf ja esta cadastrado no sistema",
                 "data": None}
 
         else:
@@ -89,9 +90,9 @@ def deletar_aluno_service(id):
 
 #FUNÇOES SERVICES SECUNDARIAS
 
-def verificar_nome_duplicados(nome):
+def verificar_cpf_duplicados(cpf):
     for nome_db in alunos_db:
-        if nome_db.nome== nome:
+        if nome_db.cpf== cpf:
 
             return True
     return False
@@ -102,11 +103,20 @@ def verificar_nome_vazio(nome):
         return True
     return False
 
-def verificar_idade(idade):
-    if idade <= 12:
 
+def verificar_idade(data_nascimento):
+    hoje = date.today()
+
+    idade = hoje.year - data_nascimento.year
+
+    if (hoje.month, hoje.day) < (data_nascimento.month, data_nascimento.day):
+        idade -=1
+
+    if idade < 12:
         return True
+
     return False
+
 
 def buscar_aluno_id(id):
 
