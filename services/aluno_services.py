@@ -7,7 +7,8 @@ def criar_aluno_service(aluno):
 
     aluno.nome = aluno.nome.lower().strip()
 
-    cpf_existente = verificar_cpf_duplicados(aluno.cpf)
+    cpf_verdadeiro = verificar_cpf(aluno.cpf)
+    cpf_duplicado = verificar_cpf_duplicados(aluno.cpf)
     nome_vazio = verificar_nome_vazio(aluno.nome)
     idade_verificada = verificar_idade(aluno.data_nascimento)
 
@@ -17,24 +18,30 @@ def criar_aluno_service(aluno):
                 "mensage": "Nome vazio",
                 "data": None}
     else:
-        if cpf_existente:
-            return {"status": "erro",
-                "menssage": "esse cpf ja esta cadastrado no sistema",
-                "data": None}
+        if cpf_verdadeiro == True:
 
-        else:
-            if idade_verificada:
+            if cpf_duplicado:
                 return {"status": "erro",
-                "menssage": "O usuario ainda não possui a idade minima permitida",
-                "data": None}
+                    "menssage": "esse cpf ja esta cadastrado no sistema",
+                    "data": None}
 
             else:
-                salvar_aluno_db(aluno)
+                if idade_verificada:
+                    return {"status": "erro",
+                    "menssage": "O usuario ainda não possui a idade minima permitida",
+                    "data": None}
 
-                return {"status": "sucesso",
-                    "menssage": "Aluno criado com sucesso",
-                    "data": aluno}
+                else:
+                    salvar_aluno_db(aluno)
 
+                    return {"status": "sucesso",
+                        "menssage": "Aluno criado com sucesso",
+                        "data": aluno}
+
+        else:
+            return {"status": "erro",
+            "menssage": "O Cpf informado é invalido",
+            "data": None}
 
 def atualizar_aluno_service(id, nome, idade):
 
@@ -126,3 +133,26 @@ def buscar_aluno_id(id):
             return aluno
         
     return None
+
+
+def verificar_cpf(cpf):
+
+    cpf = cpf.replace(".", "").replace("-","")
+
+    if len(cpf) != 11 or cpf == cpf[0] * 11:
+        return False
+    
+    soma = sum(int(cpf[i]) * (10 - i) for i in range (9))
+    digito1 = (soma * 10 % 11) % 10
+
+    if digito1 != int(cpf[9]):
+        return False
+
+
+    soma = sum(int(cpf[i]) * (11 - i) for i in range (10))
+    digito2 = (soma * 10 % 11) % 10
+
+    if digito2 != int(cpf[10]):
+        return False
+
+    return True
