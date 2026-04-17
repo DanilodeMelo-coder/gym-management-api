@@ -7,41 +7,33 @@ def criar_aluno_service(aluno):
 
     aluno.nome = aluno.nome.lower().strip()
 
-    cpf_verdadeiro = verificar_cpf(aluno.cpf)
-    cpf_duplicado = verificar_cpf_duplicados(aluno.cpf)
-    nome_vazio = verificar_nome_vazio(aluno.nome)
-    idade_verificada = verificar_idade(aluno.data_nascimento)
-
-    if nome_vazio:
-
+    if verificar_nome_vazio(aluno.nome):
         return {"status": "erro",
-                "mensage": "Nome vazio",
-                "data": None}
-    else:
-        if cpf_verdadeiro == True:
+        "mensage": "Nome vazio",
+        "data": None}
 
-            if cpf_duplicado:
-                return {"status": "erro",
-                    "menssage": "esse cpf ja esta cadastrado no sistema",
-                    "data": None}
+    if not verificar_cpf(aluno.cpf):
+        return {"status": "erro",
+        "mensage": "O Cpf informado é invalido",
+        "data": None}
 
-            else:
-                if idade_verificada:
-                    return {"status": "erro",
-                    "menssage": "O usuario ainda não possui a idade minima permitida",
-                    "data": None}
+    if verificar_cpf_duplicados(aluno.cpf):
+        return {"status": "erro",
+        "mensage": "esse cpf ja esta cadastrado no sistema",
+        "data": None}
 
-                else:
-                    salvar_aluno_db(aluno)
 
-                    return {"status": "sucesso",
-                        "menssage": "Aluno criado com sucesso",
-                        "data": aluno}
+    if verificar_idade(aluno.data_nascimento):
+        return {"status": "erro",
+        "mensage": "O usuario ainda não possui a idade minima permitida",
+        "data": None}
 
-        else:
-            return {"status": "erro",
-            "menssage": "O Cpf informado é invalido",
-            "data": None}
+    salvar_aluno_db(aluno)
+
+    return {"status": "sucesso",
+    "mensage": "Aluno criado com sucesso",
+    "data": aluno}
+
 
 def atualizar_aluno_service(id, nome, idade):
 
