@@ -35,6 +35,7 @@ def criar_aluno_service(aluno):
     "data": aluno}
 
 
+
 def atualizar_aluno_service(id, nome, idade):
 
     nome = nome.lower().strip()
@@ -66,6 +67,7 @@ def atualizar_aluno_service(id, nome, idade):
                     "menssage": "Aluno não encontrado",
                     "data": None
                     }
+
 
 def deletar_aluno_service(id):
     
