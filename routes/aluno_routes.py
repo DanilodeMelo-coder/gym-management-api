@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from services.aluno_services import criar_aluno_service, atualizar_aluno_service, deletar_aluno_service
 from database.db import alunos_db
-from models.aluno import Aluno, AlunoUpdate
+from models.aluno import Aluno, AlunoUpdate, Criar_aluno
 
 
 router = APIRouter()
@@ -12,7 +12,7 @@ def home():
     return alunos_db
 
 @router.post("/criar-aluno")
-def criar_aluno(aluno: Aluno):
+def criar_aluno(aluno: Criar_aluno):
 
     
     aluno_verificado = criar_aluno_service(aluno)
