@@ -11,6 +11,13 @@ class Aluno(BaseModel):
     cpf: str
     admin: Optional [bool]
 
+class Criar_aluno(BaseModel):
+    nome: str
+    email: str
+    data_nascimento: date
+    cpf: str
+    admin: Optional [bool]
+
 class AlunoUpdate(BaseModel):
     nome: str
     idade: int
