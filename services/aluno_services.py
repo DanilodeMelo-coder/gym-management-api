@@ -1,9 +1,12 @@
 from database.db import alunos_db, salvar_aluno_db
 from datetime import date
+from models.aluno import Criar_aluno, Aluno
 
 #FUNÇOES SERVICES PRINCIPAIS
 
-def criar_aluno_service(aluno):
+def criar_aluno_service(aluno: Criar_aluno):
+
+    aluno = Aluno(**aluno.model_dump())
 
     aluno.nome = aluno.nome.lower().strip()
 
