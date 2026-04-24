@@ -11,6 +11,9 @@ class Aluno(BaseModel):
     cpf: str
     admin: bool = False
 
+    class Config:
+        from_attributes = True 
+
 class Criar_aluno(BaseModel):
     nome: str
     email: str
