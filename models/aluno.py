@@ -9,7 +9,7 @@ class Aluno(BaseModel):
     email: str
     data_nascimento: date
     cpf: str
-    admin: Optional [bool]
+    admin: bool = False
 
 class Criar_aluno(BaseModel):
     nome: str
@@ -20,6 +20,6 @@ class Criar_aluno(BaseModel):
 
 class AlunoUpdate(BaseModel):
     nome: str
-    idade: int
-    data_nascimento: str
+    email: str
+    data_nascimento: date
     admin: Optional [bool]
