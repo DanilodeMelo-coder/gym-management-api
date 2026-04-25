@@ -1,26 +1,22 @@
-from database.db import alunos_db, salvar_aluno_db
+#from database.db import alunos_db, salvar_aluno_db
 from datetime import date
-from models.aluno import Criar_aluno, Aluno
+from schemas.aluno import Criar_aluno, AlunoUpdate
+from sqlalchemy.orm import Session
+from models.aluno import Aluno
+import uuid
 
-#FUNÇOES SERVICES PRINCIPAIS
 
-def criar_aluno_service(aluno: Criar_aluno):
 
-    aluno = Aluno(**aluno.model_dump())
-
-    aluno.nome = aluno.nome.lower().strip()
-
-    if verificar_nome_vazio(aluno.nome):
-        return {"status": "erro",
-        "mensage": "Nome vazio",
-        "data": None}
+#CRIAR ALUNO
+def criar_aluno_service(aluno: Criar_aluno, db: Session):
 
     if not verificar_cpf(aluno.cpf):
         return {"status": "erro",
         "mensage": "O Cpf informado é invalido",
         "data": None}
 
-    if verificar_cpf_duplicados(aluno.cpf):
+    cpf_existente = db.query(Aluno).filter(Aluno.cpf == aluno.cpf).first()
+    if cpf_existente:
         return {"status": "erro",
         "mensage": "esse cpf ja esta cadastrado no sistema",
         "data": None}
@@ -31,81 +27,77 @@ def criar_aluno_service(aluno: Criar_aluno):
         "mensage": "O usuario ainda não possui a idade minima permitida",
         "data": None}
 
-    salvar_aluno_db(aluno)
+    email_existente = db.query(Aluno).filter(Aluno.email == aluno.email).first()
+    if email_existente:
+        return {"status": "erro",
+        "mensage": "esse email ja esta cadastrado no sistema",
+        "data": None}
+
+    aluno_novo = Aluno(
+        id= str(uuid.uuid4()),
+        nome= aluno.nome.lower().strip(),
+        email= aluno.email,
+        cpf= aluno.cpf,
+        data_nascimento= aluno.data_nascimento,
+        admin= aluno.admin
+    )
+
+    db.add(aluno_novo)
+    db.commit()
+    db.refresh(aluno_novo)
 
     return {"status": "sucesso",
     "mensage": "Aluno criado com sucesso",
-    "data": aluno}
+    "data": aluno_novo}
 
 
-
-def atualizar_aluno_service(id, nome, idade):
-
-    nome = nome.lower().strip()
-
-    aluno_procurado= buscar_aluno_id(id)
-
-    nome_vazio = verificar_nome_vazio(nome)
-
-    if aluno_procurado is not None:
-
-        if nome_vazio:
-
-            return {"status": "erro",
-                "mensage": "Nome vazio",
-                "data": None}
-        
-        else:
-
-            aluno_procurado.nome = nome
-            aluno_procurado.idade = idade
-
-            return {"status": "sucesso",
-                        "menssage": f"dados do aluno {aluno_procurado.nome} atualizados com sucesso",
-                        "data": aluno_procurado
-                        }
-
-    else:
-        return {"status": "Erro",
-                    "menssage": "Aluno não encontrado",
-                    "data": None
-                    }
+#Listar Alunos
+def listar_alunos(db: session):
+    return db.query(Aluno).all()
 
 
-def deletar_aluno_service(id):
-    
-    aluno_procurado = buscar_aluno_id(id)
+#Atualizar aluno
+def atualizar_aluno_service(id: str, dados: AlunoUpdate, db: session):
+    aluno = db.query(Aluno).filter(aluno.id == id).first()
 
-    if aluno_procurado is not None:
-
-        alunos_db.remove(aluno_procurado)
-
-        return {"status": "sucesso",
-                "menssage": "Aluno excluido com sucesso",
-                "data": aluno_procurado
-                }
-
-    return {"status": "Erro",
-            "menssage": "Aluno não encontrado",
-            "data": None
-            }
+    if not aluno:
+        return {"status": "erro",
+        "mensage": "Aluno não encontrado",
+        "data": None}
 
 
+    aluno.nome = dados.nome.lower().strip()
+    aluno.email = dados.email
+    aluno.data_nascimento = dados.data_nascimento
 
-#FUNÇOES SERVICES SECUNDARIAS
+    if dados.admin is not None:
+        aluno.admin = dados.admin
 
-def verificar_cpf_duplicados(cpf):
-    for nome_db in alunos_db:
-        if nome_db.cpf== cpf:
+    db.commit()
+    db.refresh(aluno)
 
-            return True
-    return False
 
-def verificar_nome_vazio(nome):
-    if nome == "":
+    return {"status": "sucesso",
+    "menssage": "dados do aluno atualizados com sucesso",
+    "data": aluno
+    }
 
-        return True
-    return False
+
+def deletar_aluno_service(id: str, db: session):
+    aluno = db.query(Aluno).filter(aluno.id == id).first()
+
+    if not aluno:
+        return {"status": "erro",
+        "mensage": "Aluno não encontrado",
+        "data": None}
+
+    db.delete(aluno)
+    db.commit()
+
+    return {"status": "sucesso",
+    "menssage": "Aluno excluido com sucesso",
+    "data": aluno
+    }
 
 
 def verificar_idade(data_nascimento):
@@ -121,15 +113,6 @@ def verificar_idade(data_nascimento):
 
     return False
 
-
-def buscar_aluno_id(id):
-
-    for aluno in alunos_db:
-        if aluno.id == id:
-
-            return aluno
-        
-    return None
 
 
 def verificar_cpf(cpf):
