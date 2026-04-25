@@ -52,12 +52,25 @@ def criar_aluno_service(aluno: Criar_aluno, db: Session):
 
 
 #Listar Alunos
-def listar_alunos(db: session):
+def listar_alunos(db: Session):
     return db.query(Aluno).all()
 
+def buscar_aluno_service(id: str, db: Session):
+    aluno = db.query(Aluno).filter(Aluno.id == id).first()
+
+    if not aluno:
+        return {"status": "erro", 
+        "mensagem": "Aluno não encontrado", 
+        "data": None
+        }
+
+    return {"status": "sucesso", 
+    "mensagem": "Aluno encontrado", 
+    "data": aluno
+    }
 
 #Atualizar aluno
-def atualizar_aluno_service(id: str, dados: AlunoUpdate, db: session):
+def atualizar_aluno_service(id: str, dados: AlunoUpdate, db: Session):
     aluno = db.query(Aluno).filter(aluno.id == id).first()
 
     if not aluno:
@@ -83,7 +96,7 @@ def atualizar_aluno_service(id: str, dados: AlunoUpdate, db: session):
     }
 
 
-def deletar_aluno_service(id: str, db: session):
+def deletar_aluno_service(id: str, db: Session):
     aluno = db.query(Aluno).filter(aluno.id == id).first()
 
     if not aluno:
@@ -112,7 +125,6 @@ def verificar_idade(data_nascimento):
         return True
 
     return False
-
 
 
 def verificar_cpf(cpf):
