@@ -1,50 +1,31 @@
-from fastapi import APIRouter
-from services.aluno_services import criar_aluno_service, atualizar_aluno_service, deletar_aluno_service
-from database.db import alunos_db
-from models.aluno import Aluno, AlunoUpdate, Criar_aluno
+from fastapi import APIRouter, Depends
+from services.aluno_services import criar_aluno_service, listar_alunos, atualizar_aluno_service, deletar_aluno_service, buscar_aluno_service
+from schemas.aluno import Criar_aluno, AlunoUpdate, Aluno
+from core.database import get_session
+from sqlalchemy.orm import Session
 
 
-router = APIRouter()
+router = APIRouter(prefix="Alunos", tag=["Alunos"])
 
 
-@router.get("/lista-alunos")
-def home():
-    return alunos_db
+@router.get("/", response_model=list[Aluno])
+def listar_aluno(db: Session = Depends(get_session)):
+    return listar_alunos(db)
 
-@router.post("/criar-aluno")
-def criar_aluno(aluno: Criar_aluno):
+@router.post("/")
+def criar_aluno(aluno: Criar_aluno, db: Session = Depends(get_session)):
+    return criar_aluno_service(aluno, db)
 
-    
-    aluno_verificado = criar_aluno_service(aluno)
-
-    return aluno_verificado
-
-
-
-@router.get("/buscar-aluno/{aluno}")
-def buscar_aluno(aluno):
-
-    for aluno_cadastrado in alunos_db:
-        if aluno_cadastrado.nome == aluno:
-            return {"aluno": aluno_cadastrado}
-        
-    return {"mensagem": "Aluno não cadastrado"}
+@router.get("/{id}")
+def buscar_aluno(id: str, db: Session = Depends(get_session)):
+    return buscar_aluno_service(id, db)
 
 
-
-@router.put("/aluno/{id}")
-def atualizar_aluno(id: int, aluno: AlunoUpdate):
-
-    aluno_atualizado = atualizar_aluno_service(id, aluno.nome, aluno.idade)
-
-    return aluno_atualizado
+@router.put("/{id}")
+def atualizar_aluno(id: str, dados: AlunoUpdate, db: Session = Depends(get_session)):
+    return AlunoUpdate(id, dados, db)
 
 
-
-
-@router.delete("/aluno/{id}")
-def deletar_aluno(id:int):
-
-    aluno_deletado = deletar_aluno_service(id)
-
-    return aluno_deletado
+@router.delete("/{id}")
+def deletar_aluno(id:str, db: Session = Depends(get_session)):
+    return deletar_aluno(id, db)
