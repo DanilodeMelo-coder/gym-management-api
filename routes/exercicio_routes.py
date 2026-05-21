@@ -1,5 +1,6 @@
+'''
 from fastapi import APIRouter
-from models.exercicio import Exercicio
+#from models.exercicio import Exercicio
 from database.db import exercicios_db
 
 
@@ -50,3 +51,4 @@ def buscar_exercicio_musculo(grupo_muscular):
     return {"status": "erro",
             "mensagem": "grupo muscular não cadastrado"
             }
+'''

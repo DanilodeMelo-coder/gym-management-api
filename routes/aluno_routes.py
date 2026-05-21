@@ -5,7 +5,7 @@ from core.database import get_session
 from sqlalchemy.orm import Session
 
 
-router = APIRouter(prefix="Alunos", tag=["Alunos"])
+router = APIRouter(prefix="/Alunos", tags=["Alunos"])
 
 
 @router.get("/", response_model=list[Aluno])

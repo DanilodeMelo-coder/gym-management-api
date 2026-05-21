@@ -1,14 +1,11 @@
-from pydantic import BaseModel
-from enum import Enum
-
-
-class GruposMusculares(str,Enum):
-    peito= "peito"
-    costas= "costas"
-    braco= "braço"
-    pernas= "pernas"
+from pydantic import BaseModel, Field
+import uuid
 
 
 class Exercicio(BaseModel):
+    id: uuid.UUID = Field(default_factory= uudi.uuid4)
     nome: str
-    grupo: GruposMusculares
+    grupo: str
+    descricao; Optional[str]
+
+
