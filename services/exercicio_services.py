@@ -10,7 +10,7 @@ GRUPOS_MUSCULARES = {"peito", "costas", "biceps", "triceps",
                     "panturrilha", "abdomen", "gluteo", "ombro"
                     }
 
-def criar_exercicio(exercicio: CriarExercicio, db: Session)
+def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
 
     nome_tratado = tratar_nome(exercicio.nome)
 
@@ -20,7 +20,7 @@ def criar_exercicio(exercicio: CriarExercicio, db: Session)
                 "mensage": f"o nome do exercicio {exercicio.nome} não é valido por possuir números ou caractéres",
                 "data": None}
 
-    exercicio_existente = db.query(Exercicio).filter(exercicio.nome == exercicio.nome).firts()
+    exercicio_existente = db.query(Exercicio).filter(Exercicio.nome == exercicio.nome).first()
     if exercicio_existente:
         return {"status": "erro",
         "mensage": "esse exercicio ja esta cadastrado no sistema",
@@ -36,7 +36,7 @@ def criar_exercicio(exercicio: CriarExercicio, db: Session)
 
     grupo_verificado = checar_grupo_muscular(exercicio.grupo)
 
-    if grupo verificado is False:
+    if grupo_verificado is False:
         return {"status": "erro",
                 "mensage": f"o grupo muscular {exercicio.grupo} não pertence a lista dos grupos validos: {GRUPOS_MUSCULARES}",
                 "data": None}
@@ -45,7 +45,7 @@ def criar_exercicio(exercicio: CriarExercicio, db: Session)
     exercicio_novo = Exercicio(
         id= str(uuid.uuid4()),
         nome= exercicio.nome.lower().strip(),
-        grupo= exercicio.grupo.lower().strip()
+        grupo= exercicio.grupo.lower().strip(),
         descricao= exercicio.descricao
     )
 
