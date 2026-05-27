@@ -20,7 +20,7 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
                 "mensage": f"o nome do exercicio {exercicio.nome} não é valido por possuir números ou caractéres",
                 "data": None}
 
-    exercicio_existente = db.query(Exercicio).filter(Exercicio.nome == exercicio.nome).first()
+    exercicio_existente = db.query(Exercicio).filter(Exercicio.nome == nome_tratado).first()
     if exercicio_existente:
         return {"status": "erro",
         "mensage": "esse exercicio ja esta cadastrado no sistema",
@@ -34,7 +34,7 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
                 "mensage": f"o nome do grupo muscular {exercicio.grupo} não é valido por possuir números ou caractéres",
                 "data": None}
 
-    grupo_verificado = checar_grupo_muscular(exercicio.grupo)
+    grupo_verificado = checar_grupo_muscular(nome_grupo_tratado)
 
     if grupo_verificado is False:
         return {"status": "erro",

@@ -1,5 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from schemas.exercicio import CriarExercicio
+from services.exercicio_services import criar_exercicio_service
+from core.database import get_session
+from sqlalchemy.orm import Session
 
 router= APIRouter(prefix="/exercicios")
 
@@ -11,11 +14,7 @@ def exercicios_cadastrados():
 
 
 @router.post("/")
-def criar_exercicio(exercicio: CriarExercicio):
+def criar_exercicio(exercicio: CriarExercicio, db: Session = Depends(get_session)):
+    return criar_exercicio_service(exercicio, db)
 
-
-    return{
-        "mensagem":"exercicio criado com sucesso",
-        "exercicio": exercicio
-    }
 
