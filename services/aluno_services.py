@@ -4,6 +4,8 @@ from schemas.aluno import Criar_aluno, AlunoUpdate
 from sqlalchemy.orm import Session
 from models.aluno import Aluno
 import uuid
+import bcrypt
+
 
 
 
@@ -33,10 +35,14 @@ def criar_aluno_service(aluno: Criar_aluno, db: Session):
         "mensagem": "esse email ja esta cadastrado no sistema",
         "data": None}
 
+    #criptografar senha
+    senha_hash = bcrypt.hashpw(aluno.senha.encode("utf-8"), bcrypt.gensalt())
+
     aluno_novo = Aluno(
         id= str(uuid.uuid4()),
         nome= aluno.nome.lower().strip(),
         email= aluno.email,
+        senha= senha_hash,
         cpf= aluno.cpf,
         data_nascimento= aluno.data_nascimento,
         tipo= aluno.tipo
