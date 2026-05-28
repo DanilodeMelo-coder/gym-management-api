@@ -46,7 +46,7 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
         id= str(uuid.uuid4()),
         nome= exercicio.nome.lower().strip(),
         grupo= exercicio.grupo.lower().strip(),
-        descricao= exercicio.descricao
+        descricao= exercicio.descricao,
         tipo= exercicio.tipo
     )
 

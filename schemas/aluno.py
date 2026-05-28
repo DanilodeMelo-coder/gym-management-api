@@ -20,6 +20,7 @@ class Criar_aluno(BaseModel):
     email: str
     data_nascimento: date
     cpf: str
+    senha: str
     tipo: TipoUsuario = TipoUsuario.aluno
 
 class AlunoUpdate(BaseModel):
