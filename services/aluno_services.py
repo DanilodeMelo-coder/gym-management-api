@@ -12,25 +12,25 @@ def criar_aluno_service(aluno: Criar_aluno, db: Session):
 
     if not verificar_cpf(aluno.cpf):
         return {"status": "erro",
-        "menssage": "O Cpf informado é invalido",
+        "mensagem": "O Cpf informado é invalido",
         "data": None}
 
     cpf_existente = db.query(Aluno).filter(Aluno.cpf == aluno.cpf).first()
     if cpf_existente:
         return {"status": "erro",
-        "menssage": "esse cpf ja esta cadastrado no sistema",
+        "mensagem": "esse cpf ja esta cadastrado no sistema",
         "data": None}
 
 
     if verificar_idade(aluno.data_nascimento):
         return {"status": "erro",
-        "menssage": "O usuario ainda não possui a idade minima permitida",
+        "mensagem": "O usuario ainda não possui a idade minima permitida",
         "data": None}
 
     email_existente = db.query(Aluno).filter(Aluno.email == aluno.email).first()
     if email_existente:
         return {"status": "erro",
-        "menssage": "esse email ja esta cadastrado no sistema",
+        "mensagem": "esse email ja esta cadastrado no sistema",
         "data": None}
 
     aluno_novo = Aluno(
@@ -39,7 +39,7 @@ def criar_aluno_service(aluno: Criar_aluno, db: Session):
         email= aluno.email,
         cpf= aluno.cpf,
         data_nascimento= aluno.data_nascimento,
-        admin= aluno.admin
+        tipo= aluno.tipo
     )
 
     db.add(aluno_novo)
@@ -47,7 +47,7 @@ def criar_aluno_service(aluno: Criar_aluno, db: Session):
     db.refresh(aluno_novo)
 
     return {"status": "sucesso",
-    "menssage": "Aluno criado com sucesso",
+    "mensagem": "Aluno criado com sucesso",
     "data": aluno_novo}
 
 
@@ -60,12 +60,12 @@ def buscar_aluno_service(id: str, db: Session):
 
     if not aluno:
         return {"status": "erro", 
-        "menssagem": "Aluno não encontrado", 
+        "mensagem": "Aluno não encontrado", 
         "data": None
         }
 
     return {"status": "sucesso", 
-    "menssagem": "Aluno encontrado", 
+    "mensagem": "Aluno encontrado", 
     "data": aluno
     }
 
@@ -75,7 +75,7 @@ def atualizar_aluno_service(id: str, dados: AlunoUpdate, db: Session):
 
     if not aluno:
         return {"status": "erro",
-        "menssage": "Aluno não encontrado",
+        "mensagem": "Aluno não encontrado",
         "data": None}
 
 
@@ -91,7 +91,7 @@ def atualizar_aluno_service(id: str, dados: AlunoUpdate, db: Session):
 
 
     return {"status": "sucesso",
-    "menssage": "dados do aluno atualizados com sucesso",
+    "mensagem": "dados do aluno atualizados com sucesso",
     "data": aluno
     }
 
@@ -101,14 +101,14 @@ def deletar_aluno_service(id: str, db: Session):
 
     if not aluno:
         return {"status": "erro",
-        "menssage": "Aluno não encontrado",
+        "mensagem": "Aluno não encontrado",
         "data": None}
 
     db.delete(aluno)
     db.commit()
 
     return {"status": "sucesso",
-    "menssage": "Aluno excluido com sucesso",
+    "mensagem": "Aluno excluido com sucesso",
     "data": aluno
     }
 

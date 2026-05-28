@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, Boolean, Date
+from sqlalchemy import Column, String, Date, Enum
 from core.database import Base
+from enums.usuario_enum import TipoUsuario
 import uuid
 
 
@@ -11,4 +12,4 @@ class Aluno(Base):
     email = Column(String, unique=True, nullable= False)
     cpf = Column(String, unique= True,  nullable= False)
     data_nascimento = Column(Date, nullable= False)
-    admin = Column(Boolean, default= False)
+    tipo = Column(Enum(TipoUsuario),  default= TipoUsuario.aluno)

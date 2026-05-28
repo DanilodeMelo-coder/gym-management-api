@@ -17,13 +17,13 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
 #Checagens do nome
     if nome_tratado is None:
         return {"status": "erro",
-                "menssage": f"o nome do exercicio {exercicio.nome} não é valido por possuir números ou caractéres",
+                "mensagem": f"o nome do exercicio {exercicio.nome} não é valido por possuir números ou caractéres",
                 "data": None}
 
     exercicio_existente = db.query(Exercicio).filter(Exercicio.nome == nome_tratado).first()
     if exercicio_existente:
         return {"status": "erro",
-        "menssage": "esse exercicio ja esta cadastrado no sistema",
+        "mensagem": "esse exercicio ja esta cadastrado no sistema",
         "data": None}
 
 #checagens do grupo
@@ -31,14 +31,14 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
 
     if nome_grupo_tratado is None:
         return {"status": "erro",
-                "menssage": f"o nome do grupo muscular {exercicio.grupo} não é valido por possuir números ou caractéres",
+                "mensagem": f"o nome do grupo muscular {exercicio.grupo} não é valido por possuir números ou caractéres",
                 "data": None}
 
     grupo_verificado = checar_grupo_muscular(nome_grupo_tratado)
 
     if grupo_verificado is False:
         return {"status": "erro",
-                "menssage": f"o grupo muscular {exercicio.grupo} não pertence a lista dos grupos validos: {GRUPOS_MUSCULARES}",
+                "mensagem": f"o grupo muscular {exercicio.grupo} não pertence a lista dos grupos validos: {GRUPOS_MUSCULARES}",
                 "data": None}
 
 
@@ -54,7 +54,7 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
     db.refresh(exercicio_novo)
 
     return {"status": "sucesso",
-    "menssage": "Exercicio criado com sucesso",
+    "mensagem": "Exercicio criado com sucesso",
     "data": exercicio_novo}
 
 

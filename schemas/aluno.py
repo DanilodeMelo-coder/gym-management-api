@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional
+from enums.usuario_enum import TipoUsuario
 from datetime import date
 import uuid
 
@@ -9,7 +10,7 @@ class Aluno(BaseModel):
     email: str
     data_nascimento: date
     cpf: str
-    admin: bool = False
+    tipo: TipoUsuario = TipoUsuario.aluno
 
     class Config:
         from_attributes = True 
@@ -19,7 +20,7 @@ class Criar_aluno(BaseModel):
     email: str
     data_nascimento: date
     cpf: str
-    admin: Optional [bool]
+    tipo: TipoUsuario = TipoUsuario.aluno
 
 class AlunoUpdate(BaseModel):
     nome: str
