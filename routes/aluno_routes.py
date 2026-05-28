@@ -23,9 +23,9 @@ def buscar_aluno(id: str, db: Session = Depends(get_session)):
 
 @router.put("/{id}")
 def atualizar_aluno(id: str, dados: AlunoUpdate, db: Session = Depends(get_session)):
-    return AlunoUpdate(id, dados, db)
+    return atualizar_aluno_service(id, dados, db)
 
 
 @router.delete("/{id}")
 def deletar_aluno(id:str, db: Session = Depends(get_session)):
-    return deletar_aluno(id, db)
+    return deletar_aluno_service(id, db)
