@@ -47,6 +47,7 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
         nome= exercicio.nome.lower().strip(),
         grupo= exercicio.grupo.lower().strip(),
         descricao= exercicio.descricao
+        tipo= exercicio.tipo
     )
 
     db.add(exercicio_novo)
