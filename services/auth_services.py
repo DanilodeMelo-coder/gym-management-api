@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 import bcrypt
 from models.aluno import Aluno
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from core.config import SENHA_AUTH, ASSINATURA_JWT
 
 
@@ -14,7 +14,7 @@ def login_service(email: str, senha: str, db: Session):
                 "mensagem": "email ou senha incorretos",
                 "data": None}
 
-    checar_senha_usuario = bcrypt.checkpw(senha.encode("utf-8"), usuario.senha)
+    checar_senha_usuario = bcrypt.checkpw(senha.encode("utf-8"), usuario.senha.encode("utf-8"))
     if not checar_senha_usuario:
         return {"status": "erro",
                 "mensagem": "email ou senha incorretos",
@@ -22,16 +22,15 @@ def login_service(email: str, senha: str, db: Session):
 
     token_atual = gerar_token(usuario)
 
-    return {"status": "sucesso",
-            "mensagem": "Login realizado com sucesso",
-            "data": token_atual}
+    return {"access_token": token_atual,
+            "token_type": "bearer"}
 
 
 def gerar_token(usuario):
     payload = {
         "sub": usuario.id,
         "tipo": usuario.tipo,
-        "exp": datetime.utcnow() + timedelta(hours= 8)
+        "exp": datetime.now(timezone.utc) + timedelta(hours= 8)
     }
 
     token = jwt.encode(payload, SENHA_AUTH, algorithm= ASSINATURA_JWT)

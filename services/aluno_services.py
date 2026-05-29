@@ -36,7 +36,7 @@ def criar_aluno_service(aluno: Criar_aluno, db: Session):
         "data": None}
 
     #criptografar senha
-    senha_hash = bcrypt.hashpw(aluno.senha.encode("utf-8"), bcrypt.gensalt())
+    senha_hash = bcrypt.hashpw(aluno.senha.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
     aluno_novo = Aluno(
         id= str(uuid.uuid4()),

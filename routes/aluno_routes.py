@@ -3,13 +3,14 @@ from services.aluno_services import criar_aluno_service, listar_alunos, atualiza
 from schemas.aluno import Criar_aluno, AlunoUpdate, Aluno
 from core.database import get_session
 from sqlalchemy.orm import Session
+from dependencias.auth_depends import autenticar_token
 
 
 router = APIRouter(prefix="/Alunos", tags=["Alunos"])
 
 
 @router.get("/", response_model=list[Aluno])
-def listar_aluno(db: Session = Depends(get_session)):
+def listar_aluno(db: Session = Depends(get_session), payload = Depends(autenticar_token)):
     return listar_alunos(db)
 
 @router.post("/")
