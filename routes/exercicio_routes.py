@@ -4,7 +4,7 @@ from services.exercicio_services import criar_exercicio_service
 from core.database import get_session
 from sqlalchemy.orm import Session
 
-router= APIRouter(prefix="/exercicios")
+router= APIRouter(prefix="/exercicios", tags=["exercicios"])
 
 
 @router.get("/")
