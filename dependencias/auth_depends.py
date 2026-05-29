@@ -17,3 +17,22 @@ def autenticar_token(token: str = Depends(oauth2_scheme) ):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido ou expirado"
         )
+
+
+def apenas_admin(payload: dict = Depends(autenticar_token)):
+    if payload["tipo"] != "admin":
+        raise HTTPException(status_code= 403, detail="Acesso negado")
+    
+    return payload
+
+def apenas_personal(payload: dict = Depends(autenticar_token)):
+    if payload["tipo"] not in ["personal", "admin"]:
+        raise HTTPException(status_code= 403, detail="Acesso negado")
+    
+    return payload
+
+def apenas_aluno(payload: dict = Depends(autenticar_token)):
+    if payload["tipo"] not in ["aluno", "personal"]:
+        raise HTTPException(status_code= 403, detail="Acesso negado")
+    
+    return payload
