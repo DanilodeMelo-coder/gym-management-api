@@ -58,7 +58,8 @@ def criar_exercicio_service(exercicio: CriarExercicio, db: Session):
     "mensagem": "Exercicio criado com sucesso",
     "data": exercicio_novo}
 
-
+def listar_exercicios(db: Session):
+    return db.query(Exercicio).all()
 
 def tratar_nome(nome: str):
 
