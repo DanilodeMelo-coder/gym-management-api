@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Date, Enum
+from sqlalchemy import Column, String, Date, Enum, ForeignKey
 from core.database import Base
 from enums.usuario_enum import TipoUsuario
 import uuid
@@ -14,3 +14,4 @@ class Aluno(Base):
     cpf = Column(String, unique= True,  nullable= False)
     data_nascimento = Column(Date, nullable= False)
     tipo = Column(Enum(TipoUsuario),  default= TipoUsuario.aluno)
+    personal_id = Column(String, ForeignKey("Usuarios.id"), nullable= True)

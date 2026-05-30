@@ -4,7 +4,6 @@ from routes.exercicio_routes import router as exercicio_router
 from routes.auth_routes import router as auth_router
 from core.database import engine, Base
 
-Base.metadata.create_all(bind= engine)
 
 app = FastAPI()
 
