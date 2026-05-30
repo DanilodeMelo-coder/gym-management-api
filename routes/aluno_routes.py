@@ -10,7 +10,7 @@ router = APIRouter(prefix="/Alunos", tags=["Alunos"])
 
 
 @router.get("/", response_model=list[Aluno])
-def listar_aluno(db: Session = Depends(get_session), payload = Depends(autenticar_token)):
+def listar_aluno(db: Session = Depends(get_session), payload = Depends(apenas_personal)):
     return listar_alunos(db)
 
 @router.post("/")
