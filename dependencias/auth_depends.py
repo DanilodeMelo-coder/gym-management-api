@@ -8,7 +8,6 @@ import jwt
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/Auth/login")
 
 def autenticar_token(token: str = Depends(oauth2_scheme) ):
-    print("token recebido:", token)
     try:
         payload= jwt.decode(token, SENHA_AUTH, algorithms=[ASSINATURA_JWT])
         return payload
@@ -27,12 +26,6 @@ def apenas_admin(payload: dict = Depends(autenticar_token)):
 
 def apenas_personal(payload: dict = Depends(autenticar_token)):
     if payload["tipo"] not in ["personal", "admin"]:
-        raise HTTPException(status_code= 403, detail="Acesso negado")
-    
-    return payload
-
-def apenas_aluno(payload: dict = Depends(autenticar_token)):
-    if payload["tipo"] not in ["aluno", "personal"]:
         raise HTTPException(status_code= 403, detail="Acesso negado")
     
     return payload

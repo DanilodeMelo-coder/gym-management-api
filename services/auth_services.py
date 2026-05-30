@@ -21,7 +21,6 @@ def login_service(email: str, senha: str, db: Session):
                 "data": None}
 
     token_atual = gerar_token(usuario)
-
     return {"access_token": token_atual,
             "token_type": "bearer"}
 
