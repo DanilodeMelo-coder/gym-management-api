@@ -28,7 +28,7 @@ def criar_treino(payload: dict, criar_treino: CriarTreino, db: Session):
         }
 
 
-def listar_treinos(payload: dict, db: Session):
+def listar(payload: dict, db: Session):
     usuario_id = payload["sub"]
     return db.query(Treino).filter(Treino.criado_por == usuario_id).all()
 
