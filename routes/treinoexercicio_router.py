@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from services.treino_services import listar, criar_treino, buscar_treino, deletar_treino, adicionar_exercicio_service, deletar_exercicio
+from services.treino_services import listar_treinos, criar_treino, buscar_treino, deletar_treino, adicionar_exercicio_service, deletar_exercicio
 from schemas.treino import CriarTreino, AdicionarExercicio
 from core.database import get_session
 from sqlalchemy.orm import Session
@@ -10,7 +10,7 @@ router = APIRouter(prefix="/Treinos", tags=["Treinos"])
 
 @router.get("/")
 def listar_treinos_rota(db: Session = Depends(get_session), payload= Depends(autenticar_token)):
-    return listar(payload, db)
+    return listar_treinos(payload, db)
 
 @router.post("/")
 def criar_treino_rota(criartreino: CriarTreino, db: Session = Depends(get_session), payload= Depends(autenticar_token)):
