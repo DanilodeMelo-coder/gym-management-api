@@ -8,6 +8,7 @@ from models.exercicio import Exercicio
 from models.convite import Convite
 from models.treino import Treino
 from models.treinoExercicio import TreinoExercicio
+from models.vinc_AlunoTreino import Vinc_AlunoTreino
 
 config = context.config
 if config.config_file_name is not None:
